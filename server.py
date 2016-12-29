@@ -63,9 +63,9 @@ def action(name):
 			wolf=", ".join([p for p in players if 'werewolf' in players[p]]),
 			name=name)
 	if role == 'tanner':
-		return '<p>To continue, <a href="timer/{name}">click here</a></p>'.format(name=name)
-
-	return render_template('roles/'+role+'.html', game=players)
+		return '<p>To continue, <a href="/timer/{name}">click here</a></p>'.format(name=name)
+	if role == 'seer':
+		return render_template('roles/seer.html', players=players, center=center, name=name)
 
 #Countdown to the end of the game
 @app.route('/timer/<name>')

@@ -1,0 +1,32 @@
+<script>
+  var reveals = 0;
+  function reveal(card, location) {
+    $('body').append("<p>You revealed: " + card);
+    if(location=='center'){
+      reveals++;
+      $("#players").remove();
+      if(reveals == 2) {
+        $("#select").remove();
+        $('body').append('<p>To continue, <a href="/timer/{{name}}">click here</a></p>');
+      }
+    }
+    else {
+      //lel copy and pasting
+      $("#select").remove();
+      $('body').append('<p>To continue, <a href="/timer/{{name}}">click here</a></p>');
+    }
+  }
+</script>
+
+<p>Select two center cards, or reveal one player's role</p>
+<div id="select">
+  {% for card in center%}
+    <button onclick="reveal('{{card}}', 'center')">Center Card</button>
+  {%endfor%}
+  <br><br>
+  <div id="players">
+    {% for name,role in players.items()%}
+      <button onclick="reveal('{{role}}', 'player')">{{name}}</button><br>
+    {%endfor%}
+  </div>
+</div>
