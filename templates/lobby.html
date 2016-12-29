@@ -1,9 +1,27 @@
 <html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script>
+  $(function() {
+    var i = setInterval(function() {
+        $.get("/check/{{name}}", function(response) {
+          console.log(response)
+          data = $.parseJSON(response);
+          if(data['role'] != "None") {
+            $("#main").text("Your role is: " + data['role']);
+            clearInterval(i);
+          }
+          $("#players").text(data['players']);
+        });
+    }, 1000);
+  });
+  </script>
+</head>
 <body>
   <p>Welcome {{name}}!</p>
-  <p>Wait and keep this page open until everyone joins.</p>
-  <p>Current players:</p><p id="players"></p>
+  <p id="main">Wait and keep this page open until everyone joins.</p>
+  <p>Current players: <span id="players">Loading...</span></p>
 
-  <p>If everyone has joined, <a href="start">click here to start the game</a></p>
+  <p>If everyone has joined, <a href="/start/{{name}}">click here to start the game</a></p>
 </body>
 <html>

@@ -1,0 +1,22 @@
+<html>
+<body>
+  <p>Total players: {{players}}<p>
+  <form action="/start_submit" method="post">
+    <input type="checkbox" name="werewolf1">Werewolf 1</input><br>
+    <input type="checkbox" name="werewolf2">Werewolf 2</input><br>
+    <input type="checkbox" name="seer">Seer</input><br>
+    <input type="checkbox" name="robber">Robber</input><br>
+    <input type="checkbox" name="troublemaker">Troublemaker</input><br>
+    <input type="checkbox" name="tanner">Tanner</input><br>
+    <input type="checkbox" name="drunk">Drunk</input><br>
+    <input type="checkbox" name="hunter">Hunter</input><br>
+    <input type="checkbox" name="mason">Mason</input><br>
+    <input type="checkbox" name="insomniac">Insomniac</input><br>
+    <input type="checkbox" name="minion">Minion</input><br>
+    <input type="checkbox" name="doppelganger">Doppelganger</input><br>
+    <input type="submit" value="Begin game!">
+  </form>
+  <p>Make sure the number of checkboxes matches with the number of players!</p>
+  <p>If you mess this up, a bunch of error 500s will probably follow</p>
+</body>
+</html>
