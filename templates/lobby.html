@@ -9,6 +9,13 @@
           data = $.parseJSON(response);
           if(data['role'] != "None") {
             $("#main").text("Your role is: " + data['role']);
+            //it's probably not necessary to have a separate call for this
+            //may change later
+            $.get("/action/{{name}}", function(response) {
+              $('#start').remove()
+              $('body').append(response);
+            });
+            $("#start").text()
             clearInterval(i);
           }
           $("#players").text(data['players']);
@@ -22,6 +29,6 @@
   <p id="main">Wait and keep this page open until everyone joins.</p>
   <p>Current players: <span id="players">Loading...</span></p>
 
-  <p>If everyone has joined, <a href="/start/{{name}}">click here to start the game</a></p>
+  <p id="start">If everyone has joined, <a href="/start/{{name}}">click here to start the game</a></p>
 </body>
 <html>
