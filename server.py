@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, request
 from random import shuffle
+from gevent.wsgi import WSGIServer
 import time
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -164,7 +165,7 @@ def timer_check(name):
 	msg = ''
 	if insomniac == name:
 		msg = 'You are now: ' + players[name]
-	return '{"time": '+str(int(3-time.time()+stopwatch))+', "msg": "'+msg+'"}'
+	return '{"time": '+str(int(300-time.time()+stopwatch))+', "msg": "'+msg+'"}'
 
 @app.route('/vote')
 def vote():
@@ -183,3 +184,6 @@ def fetch_vote():
 @app.route('/fetchroles')
 def fetch_roles():
 	return str(players).replace("'",'"')
+
+serv = WSGIServer(('', 80), app)
+serv.serve_forever()
