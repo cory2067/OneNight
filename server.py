@@ -1,11 +1,13 @@
 from flask import Flask, render_template, redirect, request
 from random import shuffle
+import time
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 players = {}
 center = []
 swap = [None]*3
-
+ready = []
+start = None
 #this variable was breaking, so making it global as lazy fix
 global host
 host = ''
@@ -59,11 +61,11 @@ def check(name):
 @app.route('/action/<name>')
 def action(name):
 	role = players[name]
-	if 'werewolf' in role:
+	if 'werewolf' in role or role == 'minion':
 		return render_template('roles/werewolf.html',
 			wolf=", ".join([p for p in players if 'werewolf' in players[p]]),
 			name=name)
-	if role == 'tanner':
+	if role in ('tanner', 'hunter', 'robber') :
 		return '<p>To continue, <a href="/timer/{name}">click here</a></p>'.format(name=name)
 	if role == 'seer':
 		return render_template('roles/seer.html', players=players, center=center, name=name)
@@ -71,6 +73,8 @@ def action(name):
 		return render_template('roles/robber.html', players=players, name=name)
 	if role == 'troublemaker':
 		return render_template('roles/troublemaker.html', players=players, name=name)
+	if role == 'drunk':
+		return render_template('roles/drunk.html', center=center, name=name)
 
 @app.route('/robber', methods=['POST'])
 def robber():
@@ -84,9 +88,35 @@ def troublemaker(name):
 	print(swap)
 	return redirect('/timer/'+name)
 
+@app.route('/drunk/<name>', methods=['POST'])
+def drunk(name):
+	swap[2] = (name, tuple(request.form)[0])
+	print(swap)
+	return redirect('/timer/'+name)
+
+#execute all swapping
+def swap_all():
+	for pair in swap[:2]:
+		temp = players[pair[0]]
+		players[pair[0]] = players[pair[1]]
+		players[pair[1]] = temp
+
+	#the drunk is weird because of center cards
+	ind = center.index(swap[2][1])
+	players[swap[2][0]] = swap[2][1]
+	center[ind] = 'drunk'
+
 #Countdown to the end of the game
 @app.route('/timer/<name>')
 def timer(name):
+	ready.append(name)
+	if len(ready) == len(players):
+		swap_all()
+		start = time.time() #begin daytime
 	return render_template('timer.html', name=name)
+
+@app.route
+def timer_check():
+	return ''
 
 app.run(host="127.0.0.1", port=5000)

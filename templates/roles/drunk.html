@@ -1,0 +1,7 @@
+<p>Swap cards with one of the center cards.</p>
+<form action="/drunk/{{name}}" method="post">
+{% for card in center %}
+  <input type="radio" name="{{card}}">Center Card</input><br>
+{%endfor%}
+<input type="submit" value="Swap">
+</form>
