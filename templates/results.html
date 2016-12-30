@@ -1,0 +1,39 @@
+<html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script>
+  var votes = 0;
+  $(function() {
+    setInterval(function() {
+        $.get("/fetchvote", function(response) {
+          console.log(response);
+          votes = 0;
+          data = $.parseJSON(response);
+          for(var key in data) {
+              if(data.hasOwnProperty(key)) {
+                votes += data[key]
+                $("#"+key).text(String(data[key]))
+              }
+            }
+            if(votes == {{n}}) {
+              //ajax-ception
+              $.get("/fetchroles", function(response) {
+                roles = $.parseJSON(response);
+                for(var key in roles) {
+                    if(data.hasOwnProperty(key)) {
+                      $("#"+key+"_role").text("Role: " + roles[key])
+                    }
+                  }
+            });
+          };
+        });
+      }, 1500);
+    });
+  </script>
+</head>
+<body>
+  {% for p in players %}
+  <p>{{p}}: <span id="{{p}}">0</span> votes. <span id="{{p}}_role"></span></p>
+  {% endfor %}
+</body>
+</html>

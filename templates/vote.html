@@ -1,0 +1,6 @@
+<form action="/kill" method="post">
+{% for p in players %}
+  <input type="radio" name="{{p}}">{{p}}</input><br>
+{%endfor%}
+<input type="submit" value="Kill!">
+</form>

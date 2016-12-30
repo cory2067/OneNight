@@ -7,12 +7,16 @@ players = {}
 center = []
 swap = [None]*3
 ready = []
-stopwatch = None
-#this variable was breaking, so making it global as lazy fix
+#these variable are breaking, so making it global as lazy fix
+#i kind of get why, but not sure how to write a better fix
 global host
 host = ''
 global insomniac
 insomniac = ''
+global stopwatch
+stopwatch = None
+global delet
+delet = {}
 
 #Home page where people join the game
 @app.route('/')
@@ -52,6 +56,8 @@ def start_submit():
 			center.append(role)
 		else:
 			players[p[index]] = role
+	global delet
+	delet = {n:0 for n in players} #num of votes to kill
 	return redirect('/lobby/' + host)
 
 #Lobby pings here every once in a while to check what role you have
@@ -102,14 +108,17 @@ def drunk(name):
 #execute all swapping
 def swap_all():
 	for pair in swap[:2]:
+		if not pair:
+			continue
 		temp = players[pair[0]]
 		players[pair[0]] = players[pair[1]]
 		players[pair[1]] = temp
 
 	#the drunk is weird because of center cards
-	ind = center.index(swap[2][1])
-	players[swap[2][0]] = swap[2][1]
-	center[ind] = 'drunk'
+	if swap[2]:
+		ind = center.index(swap[2][1])
+		players[swap[2][0]] = swap[2][1]
+		center[ind] = 'drunk'
 
 #Countdown to the end of the game
 @app.route('/timer/<name>')
@@ -117,17 +126,38 @@ def timer(name):
 	ready.append(name)
 	if len(ready) == len(players):
 		swap_all()
+		print(players)
+		global stopwatch
 		stopwatch = time.time() #begin daytime
 	return render_template('timer.html', name=name)
 
 @app.route('/timer_check/<name>')
 def timer_check(name):
+	global stopwatch
 	if not stopwatch:
 		return "wait"
 
 	msg = ''
 	if insomniac == name:
 		msg = 'You are now: ' + players[name]
-	return '{"time": '+str(int(stopwatch))+', "msg": "'+msg+'"}'
+	return '{"time": '+str(int(3-time.time()+stopwatch))+', "msg": "'+msg+'"}'
+
+@app.route('/vote')
+def vote():
+	return render_template('vote.html', players=players)
+
+@app.route('/kill', methods=['POST'])
+def kill():
+	global delet
+	delet[tuple(request.form)[0]] += 1
+	return render_template('results.html', n=len(players), players=players)
+
+@app.route('/fetchvote')
+def fetch_vote():
+	return str(delet).replace("'",'"')
+
+@app.route('/fetchroles')
+def fetch_roles():
+	return str(players).replace("'",'"')
 
 app.run(host="127.0.0.1", port=5000)

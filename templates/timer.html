@@ -1,5 +1,26 @@
 <html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script>
+  $(function() {
+    var i = setInterval(function() {
+        //wew lad this is a whole lot of repeat from lobby.html
+        $.get("/timer_check/{{name}}", function(response) {
+          console.log(response)
+          if(response == 'wait') { return; }
+
+          data = $.parseJSON(response);
+          $("#status").text("Time remaining: " + data['time'])
+          $("#extra").text(data['msg'])
+          if(data['time'] < 0)
+            window.location.replace("/vote");
+        });
+    }, 1000);
+  });
+  </script>
+</head>
 <body>
   <p id="status">Wait until everybody finishes taking their action.</p>
+  <p id="extra"></p>
 </body>
 </html>
