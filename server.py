@@ -85,6 +85,8 @@ def start_submit():
 #Lobby pings here every once in a while to check what role you have
 @app.route('/check/<name>')
 def check(name):
+	if not name in players:
+ 		return '' #this typically shouldn't happen
 	return ('{"players": '+str(len(players))+', "role":"'+str(players[name])+'"}')
 
 #Send out forms to the users to take actions
@@ -182,4 +184,4 @@ def fetch_vote():
 def fetch_roles():
 	return str(players).replace("'",'"')
 
-app.run(host="127.0.0.1", port=5000)
+app.run(host="0.0.0.0", port=80)
