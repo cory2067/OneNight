@@ -7,10 +7,12 @@ players = {}
 center = []
 swap = [None]*3
 ready = []
-start = None
+stopwatch = None
 #this variable was breaking, so making it global as lazy fix
 global host
 host = ''
+global insomniac
+insomniac = ''
 
 #Home page where people join the game
 @app.route('/')
@@ -65,7 +67,10 @@ def action(name):
 		return render_template('roles/werewolf.html',
 			wolf=", ".join([p for p in players if 'werewolf' in players[p]]),
 			name=name)
-	if role in ('tanner', 'hunter', 'robber') :
+	if role in ('tanner', 'hunter', 'robber', 'insomniac') :
+		if role == 'insomniac':
+			global insomniac
+			insomniac = name
 		return '<p>To continue, <a href="/timer/{name}">click here</a></p>'.format(name=name)
 	if role == 'seer':
 		return render_template('roles/seer.html', players=players, center=center, name=name)
@@ -112,11 +117,17 @@ def timer(name):
 	ready.append(name)
 	if len(ready) == len(players):
 		swap_all()
-		start = time.time() #begin daytime
+		stopwatch = time.time() #begin daytime
 	return render_template('timer.html', name=name)
 
-@app.route
-def timer_check():
-	return ''
+@app.route('/timer_check/<name>')
+def timer_check(name):
+	if not stopwatch:
+		return "wait"
+
+	msg = ''
+	if insomniac == name:
+		msg = 'You are now: ' + players[name]
+	return '{"time": '+str(int(stopwatch))+', "msg": "'+msg+'"}'
 
 app.run(host="127.0.0.1", port=5000)
