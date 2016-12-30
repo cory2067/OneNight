@@ -21,13 +21,35 @@ delet = {}
 #Home page where people join the game
 @app.route('/')
 def main():
+	global delet
+	if delet: #if a game has already been started
+		return render_template('new.html')
+
 	#Display the main page, and inject the current list of players
 	return render_template('index.html',
 		players=(", ".join(list(players)) if list(players) else 'Nobody!'))
 
+@app.route('/new')
+def new():
+	#clear EVERYTHING
+	players.clear()
+	center.clear()
+	ready.clear()
+	swap.clear()
+	global host
+	host = ''
+	global insomniac
+	insomniac = ''
+	global stopwatch
+	stopwatch = None
+	global delet
+	delet = {}
+	return redirect('/')
+
+
 #Submit to the server that the user wants to join
 @app.route('/join', methods=['POST'])
-def new():
+def join():
 	name = request.form["name"]
 	players[name] = None
 	return redirect('/lobby/' + name)
