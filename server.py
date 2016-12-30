@@ -35,7 +35,7 @@ def new():
 	players.clear()
 	center.clear()
 	ready.clear()
-	swap.clear()
+	swap[0]=None;swap[1]=None;swap[2]=None
 	global host
 	host = ''
 	global insomniac
@@ -183,5 +183,3 @@ def fetch_vote():
 @app.route('/fetchroles')
 def fetch_roles():
 	return str(players).replace("'",'"')
-
-app.run(host="0.0.0.0", port=80)
