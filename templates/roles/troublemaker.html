@@ -1,0 +1,11 @@
+<p>Switch two players' cards</p>
+<div id="select">
+  <form action="/troublemaker/{{name}}" method="post">
+  {% for n in players%}
+    {% if n != name %}
+      <input type="checkbox" name="{{n}}">{{n}}</input><br>
+    {% endif %}
+  {%endfor%}
+  <input type="submit" value="Swap">
+  </form>
+</div><p>To continue, <a href="/timer/{{name}}">click here</a></p>

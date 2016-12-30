@@ -4,6 +4,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 players = {}
 center = []
+swap = [None]*3
 
 #this variable was breaking, so making it global as lazy fix
 global host
@@ -66,6 +67,22 @@ def action(name):
 		return '<p>To continue, <a href="/timer/{name}">click here</a></p>'.format(name=name)
 	if role == 'seer':
 		return render_template('roles/seer.html', players=players, center=center, name=name)
+	if role == 'robber':
+		return render_template('roles/robber.html', players=players, name=name)
+	if role == 'troublemaker':
+		return render_template('roles/troublemaker.html', players=players, name=name)
+
+@app.route('/robber', methods=['POST'])
+def robber():
+	swap[0] = tuple(request.form)
+	print(swap)
+	return ""
+
+@app.route('/troublemaker/<name>', methods=['POST'])
+def troublemaker(name):
+	swap[1] = tuple(request.form)
+	print(swap)
+	return redirect('/timer/'+name)
 
 #Countdown to the end of the game
 @app.route('/timer/<name>')

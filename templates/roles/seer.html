@@ -25,8 +25,8 @@
   {%endfor%}
   <br><br>
   <div id="players">
-    {% for name,role in players.items()%}
-      <button onclick="reveal('{{role}}', 'player')">{{name}}</button><br>
+    {% for n,role in players.items()%}
+      <button onclick="reveal('{{role}}', 'player')">{{n}}</button><br>
     {%endfor%}
   </div>
 </div>

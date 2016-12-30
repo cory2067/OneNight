@@ -1,0 +1,23 @@
+
+<script>
+  var reveals = 0;
+  function reveal(n, card) {
+    $('body').append("<p>You are now: " + card);
+    $("#players").remove();
+    var data = {}
+    data['{{name}}'] = null
+    data[n] = null //lol wtf am i doing with this null dict bs, todo: change to list
+    $.post("/robber", data, function(d) {
+        $('body').append('<p>To continue, <a href="/timer/{{name}}">click here</a></p>');
+    });
+  }
+</script>
+
+<p>Select somebody to swap cards with them.</p>
+<div id="players">
+  {% for n,role in players.items()%}
+    {% if n != name %}
+    <button onclick="reveal('{{n}}', '{{role}}')">{{n}}</button><br>
+    {% endif %}
+  {%endfor%}
+</div>
