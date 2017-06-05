@@ -1,6 +1,7 @@
 Flask==0.12.2
 gevent==1.2.1
-gunicorn==18.0
+Twisted-Core==11.0.0
+Twisted-Names==11.0.0
+Twisted-Web==11.0.0
 Jinja2==2.7.1
 itsdangerous==0.23
-
