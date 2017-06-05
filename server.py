@@ -2,6 +2,7 @@ from flask import Flask, render_template, redirect, request
 from random import shuffle
 from gevent.wsgi import WSGIServer
 import time
+import os
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 players = {}
