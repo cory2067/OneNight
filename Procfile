@@ -1,1 +1,1 @@
-web: twisted web --wsgi server.app
+web: twistd web --wsgi server.app
