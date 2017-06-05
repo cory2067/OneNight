@@ -2,6 +2,7 @@ from flask import Flask, render_template, redirect, request
 from random import shuffle
 from gevent.wsgi import WSGIServer
 import time
+import os
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 players = {}
@@ -185,5 +186,6 @@ def fetch_vote():
 def fetch_roles():
 	return str(players).replace("'",'"')
 
-serv = WSGIServer(('', 46748),app)
+os.environ['PORT'] = '5000'
+serv = WSGIServer(('', 5000),app)
 serv.serve_forever()
