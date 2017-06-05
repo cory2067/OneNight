@@ -1,2 +1,3 @@
 Flask==0.12.2
 gevent==1.2.1
+python-twisted-core==16.0.0
