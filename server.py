@@ -186,5 +186,6 @@ def fetch_vote():
 def fetch_roles():
 	return str(players).replace("'",'"')
 
+os.environ['PORT'] = '5000'
 serv = WSGIServer(('', 5000),app)
 serv.serve_forever()
